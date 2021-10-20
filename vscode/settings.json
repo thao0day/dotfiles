@@ -1,0 +1,48 @@
+{
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.iconTheme": "vscode-jetbrains-icon-theme",
+    "vsicons.dontShowNewVersionMessage": true,
+    "editor.fontFamily": "IBM Plex Mono",
+    "editor.fontSize": 16,
+    "editor.fontWeight": "normal",
+    "editor.lineHeight": 30,
+    "terminal.integrated.fontFamily": "IBM Plex Mono",
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontSize": 14,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "explorer.confirmDelete": false,
+    "[javascript]": {
+        "editor.rulers": [
+            120
+        ],
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[php]": {
+        "editor.rulers": [
+            80
+        ],
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.sideBar.location": "right",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "customizeUI.moveStatusbar": true,
+    "customizeUI.activityBarHideSettings": true,
+    "customizeUI.activityBar": "bottom",
+    "tabnine.experimentalAutoImports": true,
+    "files.autoSave": "afterDelay",
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "phpcs.executablePath": "/Users/dt/.composer/vendor/bin/phpcs",
+    "phpcs.standard": "./phpcs.xml",
+    "security.workspace.trust.untrustedFiles": "open"
+}
