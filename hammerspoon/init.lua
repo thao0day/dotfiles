@@ -36,6 +36,14 @@ function chrome_active_tab_with_name(name)
         ]])
     end
 end
+-- support quick coding time
+
+function keyStrokes(str)
+    return function()
+        hs.eventtap.keyStrokes(str)
+    end
+end
+
 
 --- quick open applications
 hs.hotkey.bind({"alt"}, "E", open("Finder"))
@@ -47,3 +55,6 @@ hs.hotkey.bind({"alt"}, "5", open("Sequel Ace"))
 
 --- Use
 hs.hotkey.bind({"alt"}, "Z", chrome_active_tab_with_name("Zalo Web"))
+
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "L", keyStrokes("console.log("))
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "D", keyStrokes("print_r();die();"))
