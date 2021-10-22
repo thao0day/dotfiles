@@ -50,8 +50,8 @@ end
 hs.hotkey.bind({"alt"}, "E", open("Finder"))
 hs.hotkey.bind({"alt"}, "1", open("Google Chrome"))
 hs.hotkey.bind({"alt"}, "2", open("Visual Studio Code"))
-hs.hotkey.bind({"alt"}, "3", open("iTerm"))
-hs.hotkey.bind({"alt"}, "4", open("Postman"))
+hs.hotkey.bind({"alt"}, "3", open("Postman"))
+hs.hotkey.bind({"alt"}, "4", open("iTerm"))
 hs.hotkey.bind({"alt"}, "5", open("Sequel Ace"))
 
 --- Use
