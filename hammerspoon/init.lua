@@ -1,3 +1,4 @@
+require("misc.clipboard")
 --- A closure function
 function open(name)
     return function()
