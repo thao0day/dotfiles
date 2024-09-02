@@ -1,4 +1,3 @@
-require("misc.clipboard")
 --- A closure function
 function open(name)
     return function()
@@ -8,54 +7,70 @@ function open(name)
         end
     end
 end
--- chrome with tab
-function chrome_active_tab_with_name(name)
-    return function()
-        hs.osascript.javascript([[
-            // below is javascript code
-            var chrome = Application('Google Chrome');
-            chrome.activate();
-            var wins = chrome.windows;
 
-            // loop tabs to find a web page with a title of <name>
-            function main() {
-                for (var i = 0; i < wins.length; i++) {
-                    var win = wins.at(i);
-                    var tabs = win.tabs;
-                    for (var j = 0; j < tabs.length; j++) {
-                    var tab = tabs.at(j);
-                    tab.title(); j;
-                    if (tab.title().indexOf(']] .. name .. [[') > -1) {
-                            win.activeTabIndex = j + 1;
-                            return;
-                        }
-                    }
-                }
-            }
-            main();
-            // end of javascript
-        ]])
+local function launchOrFocusOrRotate(app)
+    local focusedWindow = hs.window.focusedWindow()
+    -- Output of the above is an hs.window object
+   
+    -- I can get the application it belongs to via the :application() method
+    -- See https://www.hammerspoon.org/docs/hs.window.html#application 
+    local focusedWindowApp = focusedWindow:application()
+    -- This returns an hs.application object
+   
+    -- Get the name of this application; this isn't really useful fof us as launchOrFocus needs the app name on disk
+    -- I do use it below, further on...
+    local focusedWindowAppName = focusedWindowApp:name()
+   
+    -- This gives the path - /Applications/<application>.app
+    local focusedWindowPath = focusedWindowApp:path()
+   
+    -- I need to extract <application> from that
+    local appNameOnDisk = string.gsub(focusedWindowPath,"/Applications/", "")
+    local appNameOnDisk = string.gsub(appNameOnDisk,".app", "")
+    -- Finder has this as its path
+    local appNameOnDisk = string.gsub(appNameOnDisk,"/System/Library/CoreServices/","")
+   
+    -- If already focused, try to find the next window
+    if focusedWindow and appNameOnDisk == app then
+      -- hs.application.get needs the name as per hs.application:name() and not the name on disk
+      -- It can also take pid or bundle, but that doesn't help here
+      -- Since I have the name already from above, I can use that though
+      local appWindows = hs.application.get(focusedWindowAppName):allWindows()
+   
+      -- https://www.hammerspoon.org/docs/hs.application.html#allWindows
+      -- A table of zero or more hs.window objects owned by the application. From the current space. 
+   
+      if #appWindows > 0 then
+          -- It seems that this list order changes after one window get focused, ™
+          -- Let's directly bring the last one to focus every time
+          -- https://www.hammerspoon.org/docs/hs.window.html#focus
+          if app == "Finder" then
+            -- If the app is Finder the window count returned is one more than the actual count, so I subtract
+            appWindows[#appWindows-1]:focus()
+          else
+            appWindows[#appWindows]:focus()
+          end
+      else 
+          -- this should not happen, but just in case
+          hs.application.launchOrFocus(app)
+      end
+    else -- if not focused
+      hs.application.launchOrFocus(app)
     end
+  end
+
+ctrlCmdShortcuts = {
+    {"1", "Google Chrome"},
+    {"2", "Visual Studio Code"},
+    {"3", "WebStorm"},
+    {"4", "Iterm"},
+    {"Q", "Safari"},
+    {"W", "Things3"},
+    {"E", "Fork"}
+}
+ 
+for i,shortcut in ipairs(ctrlCmdShortcuts) do
+  hs.hotkey.bind({"alt"}, shortcut[1], function()
+      launchOrFocusOrRotate(shortcut[2])
+  end)
 end
--- support quick coding time
-
-function keyStrokes(str)
-    return function()
-        hs.eventtap.keyStrokes(str)
-    end
-end
-
-
---- quick open applications
-hs.hotkey.bind({"alt"}, "E", open("Finder"))
-hs.hotkey.bind({"alt"}, "1", open("Google Chrome"))
-hs.hotkey.bind({"alt"}, "2", open("Visual Studio Code"))
-hs.hotkey.bind({"alt"}, "3", open("Postman"))
-hs.hotkey.bind({"alt"}, "4", open("iTerm"))
-hs.hotkey.bind({"alt"}, "5", open("Sequel Ace"))
-
---- Use
-hs.hotkey.bind({"alt"}, "Z", chrome_active_tab_with_name("Zalo Web"))
-
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "L", keyStrokes("console.log("))
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "D", keyStrokes("print_r();die();"))
